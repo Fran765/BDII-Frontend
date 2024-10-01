@@ -38,13 +38,17 @@ export class StoreComponent {
                 private productoService: ProductService,
                 private clientService: ClientService,
                 private discountService: DiscountService,
-                private saleService: SaleService){ }
+                private saleService: SaleService
+    ){ }
 
     ngOnInit(): void {
       this.route.paramMap.subscribe(params => {
+
         const clientIdParam = params.get('clientId');
+
         if (clientIdParam !== null) {
           this.clientId = Number(clientIdParam);
+
           this.cargarTarjetasCliente(this.clientId);
 
         } else {
@@ -52,22 +56,37 @@ export class StoreComponent {
         }
       });
 
-      this.productoService.getProductos().subscribe(data => {
-        this.products = data;
-      });
+      this.productoService.getProductos()
+        .subscribe(
+          data => {
+            this.products = data;
+            this.msjError = ''
+          },
+          (error) => {
+            this.msjError = 'Error al obtener los productos: ' + error
+          });
 
-      this.discountService.getDiscounts().subscribe(data =>{
-        this.discounts = data;
-        });
-
-      console.log('Discounts:', this.discounts);
+      this.discountService.getDiscounts()
+        .subscribe(
+          data =>{
+            this.discounts = data;
+          },
+          (error) =>{
+            this.msjError = 'Error al obtener los descuentos: ' + error
+          });
     }
 
     cargarTarjetasCliente(clientId: number): void {
 
-      this.clientService.getCards(clientId).subscribe(data => {
-        this.clientCards = data;
-      })
+      this.clientService.getCards(clientId)
+        .subscribe(
+          (data) => {
+            this.clientCards = data;
+            this.msjError = ''
+          },
+          (error) => {
+            this.msjError = 'Error al obtener las tarjetas del cliente.'
+          });
     }
 
     onCheckboxChange(event: any, producto: any) {
@@ -85,9 +104,21 @@ export class StoreComponent {
         return;
       }
 
-      this.saleService.getTotalPrice(this.selectedCard?.id, this.selectedProducts).subscribe( data => {
-        this.totalPrice = data;
-      })
+      if (this.selectedProducts.length === 0) {
+        this.msjError = 'Debe seleccionar al menos un producto.';
+        return;
+      }
+
+      this.saleService.getTotalPrice(this.selectedCard?.id, this.selectedProducts)
+        .subscribe(
+          (data) => {
+            this.totalPrice = data;
+            this.msjOk = 'Precio total calculado exitosamente.'
+            this.msjError = '';
+          },
+          (error) => {
+            this.msjError = 'Error al obtener el precio total.'
+          });
     }
 
 
@@ -106,27 +137,21 @@ export class StoreComponent {
       this.saleService.completePurchase(this.clientId, this.selectedCard.id, this.selectedProducts)
         .subscribe({
           next: () => {
-            this.msjOk = 'Venta completada exitosamente'
+            this.msjOk = 'Venta completada exitosamente.'
             this.msjError = '';
           },
           error: (error: string) => {
-            console.error("Error al completar la venta:", error);
-            this.msjError = error;
+            this.msjError = 'Error al querer finalizar la compra.';
           }
         });
     }
 
     isProductDiscount(discount: Discount): discount is ProductDiscount {
-      const result = (discount as ProductDiscount).brandDTO !== undefined;
-      console.log('isProductDiscount:', discount, result);
-      return result;
+      return (discount as ProductDiscount).brandDTO !== undefined;
     }
 
     isBuyDiscount(discount: Discount): discount is BuyDiscount {
-      const result = (discount as BuyDiscount).cardTypeDTO !== undefined;
-      console.log('isBuyDiscount:', discount, result);
-      return result;
+      return  (discount as BuyDiscount).cardTypeDTO !== undefined;
     }
-
 
   }
