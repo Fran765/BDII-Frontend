@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {catchError, Observable} from "rxjs";
 import {Product} from "../models/product";
+import {ErrorHandlingService} from "./error-handling.service";
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class SaleService {
 
   private apiUrl= "http://localhost:8080/ventas";
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private errorHandlingService: ErrorHandlingService) { }
 
   getTotalPrice(idTarjeta: number, products: Product[]): Observable<number> {
 
@@ -18,13 +19,21 @@ export class SaleService {
       idProducts: products.map(product => product.id)
     };
 
-    return this.http.post<number>(`${this.apiUrl}/monto-total/${idTarjeta}`, requestBody);
+    return this.http.post<number>(`${this.apiUrl}/monto-total/${idTarjeta}`, requestBody)
+      .pipe(
+        catchError(this.errorHandlingService.handleError)
+      );
   }
 
-  completePurchase(idClient: number | null, idTarjeta: number | undefined, products: Product[]): void {
+  completePurchase(idClient: number | null, idTarjeta: number | undefined, products: Product[]): Observable<void> {
     const requestBody = {
       idProducts: products.map(product => product.id)
     };
-    this.http.post(`${this.apiUrl}/finalizar-compra/${idClient}/${idTarjeta}`, requestBody);
+
+    return this.http.post<void>(`${this.apiUrl}/finalizar-compra/${idClient}/${idTarjeta}`, requestBody)
+      .pipe(
+        catchError(this.errorHandlingService.handleError)
+      );
   }
+
 }

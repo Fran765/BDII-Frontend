@@ -103,9 +103,17 @@ export class StoreComponent {
         return;
       }
 
-      this.saleService.completePurchase(this.clientId, this.selectedCard?.id, this.selectedProducts);
-
-      this.msjOk = 'La compra se ha realizado con exito.'
+      this.saleService.completePurchase(this.clientId, this.selectedCard.id, this.selectedProducts)
+        .subscribe({
+          next: () => {
+            this.msjOk = 'Venta completada exitosamente'
+            this.msjError = '';
+          },
+          error: (error: string) => {
+            console.error("Error al completar la venta:", error);
+            this.msjError = error;
+          }
+        });
     }
 
     isProductDiscount(discount: Discount): discount is ProductDiscount {
