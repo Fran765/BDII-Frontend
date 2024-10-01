@@ -14,14 +14,17 @@ export class SaleService {
 
   getTotalPrice(idTarjeta: number, products: Product[]): Observable<number> {
 
-    const productIds = products.map(product => product.id);
+    const requestBody = {
+      idProducts: products.map(product => product.id)
+    };
 
-    return this.http.post<number>(`${this.apiUrl}/monto-total/${idTarjeta}`, productIds);
+    return this.http.post<number>(`${this.apiUrl}/monto-total/${idTarjeta}`, requestBody);
   }
 
   completePurchase(idClient: number | null, idTarjeta: number | undefined, products: Product[]): void {
-    const productIds = products.map(product => product.id);
-
-    this.http.post(`${this.apiUrl}/finalizar-compra/${idClient}/${idTarjeta}`, productIds);
+    const requestBody = {
+      idProducts: products.map(product => product.id)
+    };
+    this.http.post(`${this.apiUrl}/finalizar-compra/${idClient}/${idTarjeta}`, requestBody);
   }
 }

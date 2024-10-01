@@ -1,7 +1,7 @@
   import { Component, OnInit } from '@angular/core';
   import { ActivatedRoute } from '@angular/router';
   import { FormsModule } from "@angular/forms";
-  import { NgFor, NgIf } from '@angular/common';
+  import {CurrencyPipe, NgFor, NgIf} from '@angular/common';
   import { ProductService } from "../services/product.service";
   import { Product } from "../models/product"
   import { CreditCard } from "../models/creditCard";
@@ -15,7 +15,10 @@
   @Component({
   selector: 'app-store',
   standalone: true,
-    imports: [FormsModule, NgFor, NgIf],
+    imports: [FormsModule,
+      NgFor,
+      NgIf,
+      CurrencyPipe],
   templateUrl: './store.component.html',
   styleUrl: './store.component.css'
 })
@@ -27,8 +30,9 @@ export class StoreComponent {
     discounts: Discount[] = [];
     clientCards: CreditCard[] = [];
     selectedCard: CreditCard | undefined;
-    totalPrice: number | undefined;
+    totalPrice: number | null = null;
     msjError: string = '';
+    msjOk: string = '';
 
     constructor(private route: ActivatedRoute,
                 private productoService: ProductService,
@@ -42,6 +46,7 @@ export class StoreComponent {
         if (clientIdParam !== null) {
           this.clientId = Number(clientIdParam);
           this.cargarTarjetasCliente(this.clientId);
+
         } else {
           alert('ID de cliente no válido.');
         }
@@ -53,7 +58,9 @@ export class StoreComponent {
 
       this.discountService.getDiscounts().subscribe(data =>{
         this.discounts = data;
-      });
+        });
+
+      console.log('Discounts:', this.discounts);
     }
 
     cargarTarjetasCliente(clientId: number): void {
@@ -63,26 +70,26 @@ export class StoreComponent {
       })
     }
 
+    onCheckboxChange(event: any, producto: any) {
+      if (event.target.checked) {
+        this.selectedProducts.push(producto);
+
+      } else {
+        this.selectedProducts = this.selectedProducts.filter(p => p !== producto);
+      }
+    }
+
     calcularTotal(): void {
-      // Implementar lógica para calcular el total
-      if (this.selectedCard === undefined) {
-        this.msjError = 'Primero debe seleccionar una tarjeta.';
+      if (!this.selectedCard || !this.selectedCard.id) {
+        this.msjError = 'Primero debe seleccionar una tarjeta válida.';
         return;
       }
+
       this.saleService.getTotalPrice(this.selectedCard?.id, this.selectedProducts).subscribe( data => {
         this.totalPrice = data;
       })
     }
 
-    onCheckboxChange(event: any, producto: any) {
-      if (event.target.checked) {
-        // Agrega el producto a la lista si está seleccionado
-        this.selectedProducts.push(producto);
-      } else {
-        // Elimina el producto de la lista si se deselecciona
-        this.selectedProducts = this.selectedProducts.filter(p => p !== producto);
-      }
-    }
 
     realizarCompra(): void {
 
@@ -91,15 +98,27 @@ export class StoreComponent {
         return;
       }
 
-      this.saleService.completePurchase(this.clientId, this.selectedCard?.id, this.selectedProducts)
+      if (!this.selectedCard) {
+        this.msjError = 'Debe seleccionar una tarjeta de crédito.';
+        return;
+      }
+
+      this.saleService.completePurchase(this.clientId, this.selectedCard?.id, this.selectedProducts);
+
+      this.msjOk = 'La compra se ha realizado con exito.'
     }
 
     isProductDiscount(discount: Discount): discount is ProductDiscount {
-      return (discount as ProductDiscount).brand !== undefined;
+      const result = (discount as ProductDiscount).brandDTO !== undefined;
+      console.log('isProductDiscount:', discount, result);
+      return result;
     }
 
     isBuyDiscount(discount: Discount): discount is BuyDiscount {
-      return (discount as BuyDiscount).cardType !== undefined;
+      const result = (discount as BuyDiscount).cardTypeDTO !== undefined;
+      console.log('isBuyDiscount:', discount, result);
+      return result;
     }
+
 
   }

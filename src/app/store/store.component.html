@@ -1,29 +1,49 @@
 <div class="container mt-0 p-4 bg-white rounded shadow">
+
   <h2 class="mb-4 text-center">Productos</h2>
-  <div class="mb-4">
-    <div *ngFor="let producto of products" class="form-check">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        id="{{producto.id}}"
-        [value]="producto"
-        (change)="onCheckboxChange($event, producto)">
-      <label class="form-check-label" for="{{producto.id}}">
-        {{ producto.description }} {{producto.brand.name}} {{producto.price}}
-      </label>
-    </div>
-  </div>
+  <table class="table table-borderless">
+    <thead>
+    <tr>
+      <th>Marca</th>
+      <th>Descripción</th>
+      <th>Precio</th>
+      <th>Seleccionar</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let producto of products">
+      <td> {{ producto.brand.name }}</td>
+      <td>{{ producto.description }}</td>
+      <td>{{ producto.price | currency }}</td>
+      <td>
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="{{producto.id}}"
+          [value]="producto"
+          (change)="onCheckboxChange($event, producto)">
+      </td>
+    </tr>
+    </tbody>
+  </table>
 
   <h2 class="mb-4 text-center">Descuentos Vigentes</h2>
   <table class="table table-borderless">
+    <thead>
+    <tr>
+      <th>Descripción</th>
+      <th>Fecha fin</th>
+    </tr>
+    </thead>
     <tbody>
     <tr *ngFor="let descuento of discounts">
       <td>
-        <ng-container *ngIf="isProductDiscount(descuento); else buyDiscount">
-          <strong>Descuento de producto:</strong> {{ descuento.description }} {{descuento.brand.name}}
+        <ng-container *ngIf="isBuyDiscount(descuento); else productDiscount">
+          <label>Descuento de {{descuento.percent}}% para tarjetas de {{descuento.cardTypeDTO.name}}</label>
         </ng-container>
-        <ng-template #buyDiscount>
-          <strong>Descuento de compra:</strong> {{ descuento.description }}
+        <ng-template #productDiscount>
+          <label *ngIf="isProductDiscount(descuento)">
+            Descuento de {{descuento.percent}}% para productos de marca {{descuento.brandDTO.name}}</label>
         </ng-template>
       </td>
       <td class="text-end">{{ descuento.endDate }}</td>
@@ -32,10 +52,10 @@
   </table>
 
 
-  <h2 class="mt-5 mb-4 text-center">Tarjetas de Crédito</h2>
+  <h2 class="mt-5 mb-4 text-center">Tarjetas de Crédito del Cliente {{clientId}}</h2>
   <div class="mb-4">
     <select class="form-select modern-select" [(ngModel)]="selectedCard">
-      <option *ngFor="let tarjeta of clientCards" [value]="tarjeta">{{tarjeta.type.name}} {{ tarjeta.number }} </option>
+      <option *ngFor="let tarjeta of clientCards" [ngValue]="tarjeta"> {{tarjeta.type.name}} {{ tarjeta.number }} </option>
     </select>
   </div>
 
@@ -43,6 +63,12 @@
     <button class="btn btn-primary btn-lg me-3 shadow-sm" (click)="calcularTotal()">Precio Total</button>
     <button class="btn btn-success btn-lg shadow-sm" (click)="realizarCompra()">Realizar Compra</button>
   </div>
+
+  <div class="text-center text mt-4" *ngIf="totalPrice">
+    <h3>Total Calculado: {{ totalPrice | currency }}</h3>
+  </div>
+
+  <div class="text-center text-ok mt-4" *ngIf="msjOk">{{msjOk}}</div>
 
   <div class="text-center text-danger mt-4" *ngIf="msjError">{{ msjError }}</div>
 </div>
