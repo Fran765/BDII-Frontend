@@ -1,0 +1,67 @@
+/* Fondo general ya con gradiente */
+.app-container {
+  background: linear-gradient(135deg, #6a11cb, #2575fc); /* Degradado */
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estilos para la tarjeta blanca del contenedor */
+.container {
+  max-width: 800px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* Modernizar selects */
+.modern-select {
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.3s;
+}
+
+.modern-select:focus {
+  border-color: #2575fc;
+  box-shadow: 0 0 8px rgba(37, 117, 252, 0.3);
+}
+
+/* Estilo de tabla sin bordes fuertes */
+.table-borderless td {
+  padding: 12px;
+  border: none;
+  font-size: 16px;
+}
+
+.table-borderless td.text-end {
+  text-align: right;
+}
+
+/* Botones modernizados */
+.btn-primary {
+  background-color: #6a11cb;
+  border-color: #6a11cb;
+}
+
+.btn-primary:hover {
+  background-color: #5a0fa8;
+  border-color: #5a0fa8;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #218838;
+}
+
+/* Mensaje de error */
+.text-danger {
+  font-size: 14px;
+}

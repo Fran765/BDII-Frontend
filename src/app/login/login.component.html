@@ -1,0 +1,10 @@
+<form (ngSubmit)="login()" #loginForm="ngForm" class="container mt-8 d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+  <div class="form-container w-50">
+    <div class="mb-3">
+      <label for="clientId" class="form-label">ID Cliente:</label>
+      <input type="text" id="clientId" name="clientId" class="form-control small-input" [(ngModel)]="clientId" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+  </div>
+</form>
+
