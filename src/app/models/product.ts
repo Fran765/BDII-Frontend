@@ -6,3 +6,12 @@ export interface Product {
   brand: {id: number, name: String};
   price: number;
 }
+
+export interface ProductUpdate {
+  id: number;
+  code: number;
+  description: String;
+  idCategory: number;
+  idBrand: number;
+  price: number;
+}

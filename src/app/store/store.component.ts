@@ -1,16 +1,17 @@
-  import { Component, OnInit } from '@angular/core';
+  import { Component } from '@angular/core';
   import { ActivatedRoute } from '@angular/router';
   import { FormsModule } from "@angular/forms";
-  import {CurrencyPipe, NgFor, NgIf} from '@angular/common';
+  import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
   import { ProductService } from "../services/product.service";
-  import { Product } from "../models/product"
+  import {Product, ProductUpdate} from "../models/product"
   import { CreditCard } from "../models/creditCard";
-  import {ClientService} from "../services/client.service";
-  import {Discount} from "../models/discount";
-  import {ProductDiscount} from "../models/productDiscount";
-  import {BuyDiscount} from "../models/buyDiscount";
-  import {DiscountService} from "../services/discount.service";
-  import {SaleService} from "../services/sale.service";
+  import { ClientService } from "../services/client.service";
+  import { Discount } from "../models/discount";
+  import { ProductDiscount } from "../models/productDiscount";
+  import { BuyDiscount } from "../models/buyDiscount";
+  import { DiscountService } from "../services/discount.service";
+  import { SaleService } from "../services/sale.service";
+  import { ModalComponent } from "../modal/modal.component";
 
   @Component({
   selector: 'app-store',
@@ -18,7 +19,7 @@
     imports: [FormsModule,
       NgFor,
       NgIf,
-      CurrencyPipe],
+      CurrencyPipe, ModalComponent],
   templateUrl: './store.component.html',
   styleUrl: './store.component.css'
 })
@@ -33,13 +34,17 @@ export class StoreComponent {
     totalPrice: number | null = null;
     msjError: string = '';
     msjOk: string = '';
+    showModal: boolean = false;
+    productToEdit: Product | null = null;
+
 
     constructor(private route: ActivatedRoute,
                 private productoService: ProductService,
                 private clientService: ClientService,
                 private discountService: DiscountService,
                 private saleService: SaleService
-    ){ }
+    ) {
+    }
 
     ngOnInit(): void {
       this.route.paramMap.subscribe(params => {
@@ -56,22 +61,14 @@ export class StoreComponent {
         }
       });
 
-      this.productoService.getProductos()
-        .subscribe(
-          data => {
-            this.products = data;
-            this.msjError = ''
-          },
-          (error) => {
-            this.msjError = 'Error al obtener los productos: ' + error
-          });
+      this.refreshProducts();
 
       this.discountService.getDiscounts()
         .subscribe(
-          data =>{
+          data => {
             this.discounts = data;
           },
-          (error) =>{
+          (error) => {
             this.msjError = 'Error al obtener los descuentos: ' + error
           });
     }
@@ -113,7 +110,7 @@ export class StoreComponent {
         .subscribe(
           (data) => {
             this.totalPrice = data;
-            this.msjOk = 'Precio total calculado exitosamente.'
+            this.msjOk = ''
             this.msjError = '';
           },
           (error) => {
@@ -151,7 +148,44 @@ export class StoreComponent {
     }
 
     isBuyDiscount(discount: Discount): discount is BuyDiscount {
-      return  (discount as BuyDiscount).cardTypeDTO !== undefined;
+      return (discount as BuyDiscount).cardType !== undefined;
     }
 
+    openModal(product: Product): void {
+      this.productToEdit = product;
+      this.showModal = true;
+    }
+
+    closeModal(): void {
+      this.showModal = false;
+      this.productToEdit = null;
+      location.reload();
+    }
+
+    saveProductChanges(updatedProduct: ProductUpdate): void {
+      this.productoService.updateProduct(updatedProduct.id, updatedProduct)
+        .subscribe(
+          () => {
+
+            this.refreshProducts();
+            this.msjOk = 'Producto actualizado exitosamente.';
+          },
+          (error) => {
+            this.msjError = 'Ups: ' + error;
+          }
+        );
+    }
+
+    private refreshProducts(): void {
+      this.productoService.getProductos()
+        .subscribe(
+          (data) => {
+            this.products = data;
+            this.msjError = '';
+          },
+          (error) => {
+            this.msjError = 'Error al obtener los productos: ' + error;
+          }
+        );
+    }
   }

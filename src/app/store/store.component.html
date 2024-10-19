@@ -8,6 +8,7 @@
       <th>Descripción</th>
       <th>Precio</th>
       <th>Seleccionar</th>
+      <th>Accion</th>
     </tr>
     </thead>
     <tbody>
@@ -23,9 +24,18 @@
           [value]="producto"
           (change)="onCheckboxChange($event, producto)">
       </td>
+      <td>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="openModal(producto)">Modificar</button>
+      </td>
     </tr>
     </tbody>
   </table>
+
+  <app-modal *ngIf="showModal"
+                     [product]="productToEdit"
+                     (closeModal)="closeModal()"
+                     (saveChanges)="saveProductChanges($event)">
+  </app-modal>
 
   <h2 class="mb-4 text-center">Descuentos Vigentes</h2>
   <table class="table table-borderless">
@@ -38,12 +48,15 @@
     <tbody>
     <tr *ngFor="let descuento of discounts">
       <td>
+        <!-- Check if it's a BuyDiscount -->
         <ng-container *ngIf="isBuyDiscount(descuento); else productDiscount">
-          <label>Descuento de {{descuento.percent}}% para tarjetas de {{descuento.cardTypeDTO.name}}</label>
+          <label>Descuento de {{ descuento.percent }}% para tarjetas de {{ descuento.cardType.name }}</label>
         </ng-container>
+
         <ng-template #productDiscount>
           <label *ngIf="isProductDiscount(descuento)">
-            Descuento de {{descuento.percent}}% para productos de marca {{descuento.brandDTO.name}}</label>
+            Descuento de {{ descuento.percent }}% para productos de marca {{ descuento.brandDTO.name }}
+          </label>
         </ng-template>
       </td>
       <td class="text-end">{{ descuento.endDate }}</td>

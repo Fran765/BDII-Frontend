@@ -13,7 +13,7 @@ export class ErrorHandlingService {
     if (error.error instanceof ErrorEvent) {
       errorMessage = `Error: ${error.error.message}`;
     } else {
-      errorMessage = `Código del error: ${error.status}\nMensaje: ${error.message}`;
+      errorMessage = error.error || `Código del error: ${error.status}\nMensaje: ${error.message}`;
     }
 
      throw new Error(errorMessage);
