@@ -48,7 +48,6 @@
     <tbody>
     <tr *ngFor="let descuento of discounts">
       <td>
-        <!-- Check if it's a BuyDiscount -->
         <ng-container *ngIf="isBuyDiscount(descuento); else productDiscount">
           <label>Descuento de {{ descuento.percent }}% para tarjetas de {{ descuento.cardType.name }}</label>
         </ng-container>

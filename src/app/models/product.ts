@@ -5,6 +5,7 @@ export interface Product {
   category: {id: number, name: String};
   brand: {id: number, name: String};
   price: number;
+  version: number;
 }
 
 export interface ProductUpdate {
@@ -14,4 +15,5 @@ export interface ProductUpdate {
   idCategory: number;
   idBrand: number;
   price: number;
+  version: number;
 }

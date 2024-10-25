@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpErrorResponse} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, throwError} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +13,11 @@ export class ErrorHandlingService {
     if (error.error instanceof ErrorEvent) {
       errorMessage = `Error: ${error.error.message}`;
     } else {
-      errorMessage = error.error || `Código del error: ${error.status}\nMensaje: ${error.message}`;
+      // Aquí asignamos el mensaje de error que viene del backend
+      errorMessage = error.error || `Mensaje: ${error.message}`;
     }
 
-     throw new Error(errorMessage);
+    // Devolver el error como un observable
+    return throwError(errorMessage);
   }
 }

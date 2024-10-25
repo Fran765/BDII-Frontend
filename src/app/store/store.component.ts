@@ -159,7 +159,7 @@ export class StoreComponent {
     closeModal(): void {
       this.showModal = false;
       this.productToEdit = null;
-      location.reload();
+      //location.reload();
     }
 
     saveProductChanges(updatedProduct: ProductUpdate): void {
