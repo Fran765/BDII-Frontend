@@ -78,6 +78,7 @@
   </div>
 
   <app-modal-info *ngIf="showModalInfo"
+                  [idClient]="clientId"
                   (closeModal)="infoUltimasCompras()"
   ></app-modal-info>
 

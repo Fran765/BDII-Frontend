@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Sale} from "../models/sale";
 import {SaleService} from "../services/sale.service";
 import {CurrencyPipe, NgFor, NgIf} from "@angular/common";
@@ -11,7 +11,7 @@ import { DatePipe } from '@angular/common';
   templateUrl: './modal-info.component.html',
   styleUrl: './modal-info.component.css'
 })
-export class ModalInfoComponent {
+export class ModalInfoComponent implements OnInit{
 
   @Input() idClient: number | null = null;
   @Output() closeModal = new EventEmitter<void>();
@@ -26,11 +26,6 @@ export class ModalInfoComponent {
         this.latestSales = sales;
       });
     }
-    /*else {
-      this.saleService.getSales().subscribe((sales)=> {
-        this.latestSales = sales;
-      })
-    }*/
   }
   onClose(){
     this.closeModal.emit();
