@@ -12,6 +12,7 @@
   import { DiscountService } from "../services/discount.service";
   import { SaleService } from "../services/sale.service";
   import { ModalComponent } from "../modal/modal.component";
+  import {ModalInfoComponent} from "../modal-info/modal-info.component";
 
   @Component({
   selector: 'app-store',
@@ -19,7 +20,7 @@
     imports: [FormsModule,
       NgFor,
       NgIf,
-      CurrencyPipe, ModalComponent],
+      CurrencyPipe, ModalComponent, ModalInfoComponent],
   templateUrl: './store.component.html',
   styleUrl: './store.component.css'
 })
@@ -36,6 +37,7 @@ export class StoreComponent {
     msjOk: string = '';
     showModal: boolean = false;
     productToEdit: Product | null = null;
+    showModalInfo: boolean = false;
 
 
     constructor(private route: ActivatedRoute,
@@ -187,5 +189,9 @@ export class StoreComponent {
             this.msjError = 'Error al obtener los productos: ' + error;
           }
         );
+    }
+
+    infoUltimasCompras(): void{
+      this.showModalInfo = !this.showModalInfo;
     }
   }

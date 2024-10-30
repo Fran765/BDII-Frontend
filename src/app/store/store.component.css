@@ -61,6 +61,16 @@
   border-color: #218838;
 }
 
+.btn-info {
+  background-color: #fc8b03;
+  border-color: #fc8b03;
+}
+
+.btn-info:hover {
+  background-color: #c57001;
+  border-color: #c57001;
+}
+
 /* Mensajes de error */
 .text-danger{
   font-size: 20px;

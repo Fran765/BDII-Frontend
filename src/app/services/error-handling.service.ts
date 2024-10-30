@@ -12,12 +12,13 @@ export class ErrorHandlingService {
 
     if (error.error instanceof ErrorEvent) {
       errorMessage = `Error: ${error.error.message}`;
+    } else if (typeof error.error === 'object' && error.error.message) {
+      errorMessage = `Mensaje: ${error.error.message}`;
     } else {
-      // Aquí asignamos el mensaje de error que viene del backend
-      errorMessage = error.error || `Mensaje: ${error.message}`;
+      errorMessage = `Mensaje: ${error.message}`;
     }
 
-    // Devolver el error como un observable
-    return throwError(errorMessage);
+    // Envía el error como observable
+    return throwError(() => new Error(errorMessage));
   }
 }

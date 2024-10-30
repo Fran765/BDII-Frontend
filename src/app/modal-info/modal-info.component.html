@@ -1,0 +1,37 @@
+<div class="modal-backdrop" (click)="onClose()"></div>
+<div class="modal-container">
+  <h2 class="mb-4 text-center">Últimas Compras</h2>
+  <table class="table table-borderless">
+    <thead>
+      <tr>
+        <th>Número de Venta</th>
+        <th>Fecha</th>
+        <th>Productos</th>
+        <th>Precio Total</th>
+        <th>Tarjeta</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let sale of latestSales">
+        <td>{{ sale.invoiceNumber }}</td>
+        <td>{{ (sale.dateAndTime | date: 'short') }}</td>
+
+        <td>
+          <ng-container *ngIf="sale.products.length > 1; else singleProduct">
+            <ng-container *ngFor="let product of sale.products; let last = last">
+              {{ product.description }} - ${{ product.price.toFixed(2) }}<span *ngIf="!last">{{ ', ' }}</span>
+            </ng-container>
+          </ng-container>
+
+          <ng-template #singleProduct>
+            {{ sale.products[0].description }} - ${{ sale.products[0].price.toFixed(2) }}
+          </ng-template>
+        </td>
+
+        <td>{{ sale.totalPrice.toFixed(2) | currency }}</td>
+        <td>{{ sale.card.number }} - ({{ sale.card.type.name }})</td>
+      </tr>
+    </tbody>
+  </table>
+  <button (click)="onClose()" class="btn btn-secondary">Cerrar</button>
+</div>

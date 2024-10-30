@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {catchError, Observable} from "rxjs";
 import {Product} from "../models/product";
 import {ErrorHandlingService} from "./error-handling.service";
+import { Sale } from '../models/sale';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,21 @@ export class SaleService {
       .pipe(
         catchError(this.errorHandlingService.handleError)
       );
+  }
+
+  latestSales(idCliente: number | null): Observable<Sale[]> {
+
+    return this.http.get<Sale[]>(`${this.apiUrl}/ultimas-ventas/${idCliente}`)
+      .pipe(
+        catchError(this.errorHandlingService.handleError)
+      )
+  }
+
+  getSales(): Observable<Sale[]> {
+    return this.http.get<Sale[]>(`${this.apiUrl}/`)
+      .pipe(
+        catchError(this.errorHandlingService.handleError)
+      )
   }
 
 }

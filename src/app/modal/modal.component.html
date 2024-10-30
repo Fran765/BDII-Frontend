@@ -1,0 +1,49 @@
+<div class="modal-backdrop" *ngIf="product">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Modificar Producto</h5>
+      <button type="button" class="btn-close" (click)="onClose()"></button>
+    </div>
+    <div class="modal-body">
+
+      <div class="mb-3">
+        <label for="productId">ID:</label>
+        <label id="productId">{{ product.id }}</label>
+      </div>
+
+      <div class="mb-3">
+        <label for="productName">Descripcion:</label>
+        <input [(ngModel)]="product.description" id="productName" class="form-control" />
+      </div>
+
+      <div class="mb-3">
+        <label for="productPrice">Precio:</label>
+        <input [(ngModel)]="product.price" id="productPrice" type="number" class="form-control" />
+      </div>
+
+      <div class="mb-3">
+        <label for="productBrand">Marca:</label>
+        <select [(ngModel)]="product.brand" id="productBrand" class="form-control">
+          <option *ngFor="let brand of brands" [ngValue]="brand">
+            {{ brand.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="productCategory">Categoría:</label>
+        <select [(ngModel)]="product.category" id="productCategory" class="form-control">
+          <option *ngFor="let category of categories" [ngValue]="category">
+            {{ category.name }}
+          </option>
+        </select>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="onClose()">Cerrar</button>
+      <button type="button" class="btn btn-primary" (click)="onSave()">Guardar</button>
+    </div>
+  </div>
+</div>
+

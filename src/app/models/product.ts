@@ -1,9 +1,12 @@
+import {Category} from "./category";
+import {Brand} from "./brand";
+
 export interface Product {
   id: number;
   code: number;
   description: String;
-  category: {id: number, name: String};
-  brand: {id: number, name: String};
+  category: Category;
+  brand: Brand;
   price: number;
   version: number;
 }
@@ -16,4 +19,12 @@ export interface ProductUpdate {
   idBrand: number;
   price: number;
   version: number;
+}
+
+export interface ProductSale{
+  code: number;
+  description: String;
+  category: String;
+  brand: String;
+  price: number;
 }

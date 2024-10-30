@@ -1,0 +1,69 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.table .form-check-input {
+  margin-top: 0;
+}
+
+/* Estilo de tabla sin bordes fuertes */
+.table-borderless td {
+  padding: 12px;
+  border: none;
+  font-size: 16px;
+}
+
+.table-borderless td.text-end {
+  text-align: right;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Nuevos estilos para el modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro */
+  z-index: 1000; /* Asegúrate de que esté detrás del modal */
+}
+
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centrar el modal */
+  background: white; /* Fondo blanco para el modal */
+  padding: 20px; /* Espaciado */
+  border-radius: 5px; /* Bordes redondeados */
+  z-index: 1001; /* Asegúrate de que esté delante del fondo */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para el modal */
+}

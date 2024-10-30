@@ -71,10 +71,15 @@
     </select>
   </div>
 
-  <div class="text-center mt-4">
-    <button class="btn btn-primary btn-lg me-3 shadow-sm" (click)="calcularTotal()">Precio Total</button>
+  <div class="d-flex justify-content-center" style="gap: 15px;">
+    <button class="btn btn-primary btn-lg shadow-sm" (click)="calcularTotal()">Precio Total</button>
     <button class="btn btn-success btn-lg shadow-sm" (click)="realizarCompra()">Realizar Compra</button>
+    <button class="btn btn-info btn-lg shadow-sm" (click)="infoUltimasCompras()">Ultimas Compras</button>
   </div>
+
+  <app-modal-info *ngIf="showModalInfo"
+                  (closeModal)="infoUltimasCompras()"
+  ></app-modal-info>
 
   <div class="text-center text mt-4" *ngIf="totalPrice">
     <h3>Total Calculado: {{ totalPrice | currency }}</h3>
